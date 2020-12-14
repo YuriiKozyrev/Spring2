@@ -73,9 +73,6 @@ create table products_categories (
 
 ----Foreign keys and Links
 --Link between Buckets and Users
-alter table if exists users
-    add constraint users_fk_bucket
-    foreign key (bucket_id) references buckets;
 
 alter table if exists buckets
     add constraint buckets_fk_user
