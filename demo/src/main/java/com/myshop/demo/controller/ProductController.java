@@ -15,6 +15,8 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
+
+
     private final ProductService productService;
 //    private final SessionObjectHolder sessionObjectHolder;
 
@@ -24,6 +26,7 @@ public class ProductController {
     }
 
     @GetMapping
+//    @MeasureMethod
     public String list(Model model){
 //        sessionObjectHolder.addClick();
         List<ProductDto> list = productService.getAll();

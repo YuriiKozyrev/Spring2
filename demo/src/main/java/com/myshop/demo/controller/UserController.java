@@ -3,11 +3,11 @@ package com.myshop.demo.controller;
 import com.myshop.demo.domain.User;
 import com.myshop.demo.dto.UserDto;
 import com.myshop.demo.service.UserService;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Objects;
@@ -28,10 +28,20 @@ public class UserController {
         return "userList";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/new")
     public String newUser(Model model){
         model.addAttribute("user", new UserDto());
         return "user";
+    }
+
+    @PostAuthorize("isAuthenticated() and #username == authentication.principal.username")
+    @GetMapping("/{name}/roles")
+    @ResponseBody
+    public String getRoles(@PathVariable("name") String username){
+        System.out.println("Called method getRoles");
+        User byName = userService.findByName(username);
+        return byName.getRole().name();
     }
 
     @PostMapping("/new")
@@ -45,6 +55,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String profileUser(Model model, Principal principal){
         if(principal == null){
@@ -60,6 +71,7 @@ public class UserController {
         return "profile";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile")
     public String updateProfileUser(UserDto dto, Model model, Principal principal){
         if(principal == null
