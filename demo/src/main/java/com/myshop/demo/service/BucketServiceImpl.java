@@ -7,6 +7,7 @@ import com.myshop.demo.domain.Product;
 import com.myshop.demo.domain.User;
 import com.myshop.demo.dto.BucketDetailDto;
 import com.myshop.demo.dto.BucketDto;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 
@@ -23,11 +24,16 @@ public class BucketServiceImpl implements BucketService {
     private final BucketRepository bucketRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final SimpMessagingTemplate template;
 
-    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService) {
+    public BucketServiceImpl(BucketRepository bucketRepository,
+                             ProductRepository productRepository,
+                             UserService userService,
+                             SimpMessagingTemplate template) {
         this.bucketRepository = bucketRepository;
         this.productRepository = productRepository;
         this.userService = userService;
+        this.template = template;
     }
 
     @Override
@@ -54,6 +60,7 @@ public class BucketServiceImpl implements BucketService {
         newProductsList.addAll(getCollectRefProductsByIds(productIds));
         bucket.setProducts(newProductsList);
         bucketRepository.save(bucket);
+
     }
 
     @Override
