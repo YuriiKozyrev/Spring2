@@ -40,15 +40,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/bucket")
-    public ResponseEntity<Void> addBucket(@PathVariable Long id, Principal principal){
-//    public String addBucket(@PathVariable Long id, Principal principal){
-//        sessionObjectHolder.addClick();
+    public String addBucket(@PathVariable Long id, Principal principal){
+        sessionObjectHolder.addClick();
         if(principal == null){
             return null;
         }
         productService.addToUserBucket(id, principal.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-//        return "redirect:/products";
+        return "redirect:/products";
     }
 
 

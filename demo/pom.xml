@@ -54,11 +54,19 @@
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
 		</dependency>
+
 		<!--Web Socket-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
+
+		<!-- INTEGRATION -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-http</artifactId>
+		</dependency>
+
 		<!--WEBJARS and JQUERY-->
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -133,7 +141,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-<!--		spring cloud client-->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-core</artifactId>
+		</dependency>
+		<!--		spring cloud client-->
 
 	</dependencies>
 

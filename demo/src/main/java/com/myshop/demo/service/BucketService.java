@@ -11,4 +11,5 @@ public interface BucketService {
 
     void addProducts(Bucket bucket, List<Long> productIds);
     BucketDto getBucketByUser(String name);
+    void commitBucketToOrder(String username);
 }
