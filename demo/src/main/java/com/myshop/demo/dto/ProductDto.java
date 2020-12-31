@@ -1,5 +1,6 @@
 package com.myshop.demo.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
