@@ -9,6 +9,7 @@ import com.myshop.demo.domain.Role;
 import com.myshop.demo.domain.User;
 import com.myshop.demo.dto.BucketDetailDto;
 import com.myshop.demo.dto.BucketDto;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +19,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.List;;
 import java.util.Optional;
 
 
 class BucketServiceImplTest {
 
     private BucketService bucketService;
+    private UserService userService;
 
     @Mock
     private BucketRepository bucketRepository;
@@ -34,30 +35,22 @@ class BucketServiceImplTest {
     @Mock
     private ProductRepository productRepository;
     @Mock
-    private UserServiceImpl userService;
-    @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
     private OrderService orderService;
-
-    private BucketDetailDto bucketDetailDto;
-
-    private User user;
 
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        bucketService = new BucketServiceImpl(bucketRepository, productRepository, userService, orderService);
         userService = new UserServiceImpl(userRepository, passwordEncoder);
+        bucketService = new BucketServiceImpl(bucketRepository, productRepository, userService, orderService);
     }
 
     @Test
     void getBucketByUser() {
 
         //have
-        String userName = "testUser";
-
         Product product = Product.builder()
                 .id(10L)
                 .title("Product")
@@ -66,30 +59,31 @@ class BucketServiceImplTest {
 
         List<Product> productList = new ArrayList<>();
         productList.add(product);
+        productList.add(product);
 
         Bucket bucket = Bucket.builder()
-                .user(user)
                 .id(1L)
                 .products(productList)
                 .build();
 
         User user = User.builder()
-                .id(100L)
-                .name(userName)
-                .email("123@test.com")
-                .password("123")
-                .role(Role.MANAGER)
+                .name("testuser")
+                .id(1L)
+                .role(Role.CLIENT)
                 .bucket(bucket)
                 .build();
 
-        Mockito.when(userRepository.findById(Mockito.eq(100L))).thenReturn(Optional.of(user));
-
+        Mockito.when(bucketRepository.findById(Mockito.eq(1L))).thenReturn(Optional.of(bucket));
+        Mockito.when(userRepository.findFirstByName(Mockito.eq("testuser"))).thenReturn(user);
 
         //execute
-        BucketDto bucketDto = bucketService.getBucketByUser(userName);
+        BucketDto bucketDto = bucketService.getBucketByUser("testuser");
 
-        // почему bucketDto создается, но внутри всё null?
-        System.out.println(bucketDto);
-//        System.out.println(user.getBucket().getProducts());
+        //chek
+        Assertions.assertNotNull(bucketDto);
+        Assertions.assertNotNull(bucketDto.getBucketDetails());
+        Assertions.assertEquals(product.getId(), bucketDto.getBucketDetails().get(0).getProductId());
+        Assertions.assertEquals(product.getTitle(), bucketDto.getBucketDetails().get(0).getTitle());
+        Assertions.assertEquals(productList.size(), bucketDto.getBucketDetails().get(0).getAmount());
     }
 }
